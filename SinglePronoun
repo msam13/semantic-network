@@ -1,0 +1,63 @@
+import networkx as nx
+import nltk
+
+s='Akshar is a topper. He likes makeouts.'
+G = nx.DiGraph()
+sen=s.split(".")
+pronounreplacement='NULL'
+for i in sen:
+    k=nltk.pos_tag(nltk.word_tokenize(i))
+    l=len(k)
+    index=0
+    noun = []
+    i=0
+    while i<l and k[i][1] != 'VBZ' and k[i][1] != 'VBN' and k[i][1] != 'VBP' and k[i][1]!= 'VBD':
+        if k[i][1] != 'CC' and k[i]!=',':
+            noun.append(i)
+            if k[i][1]!='PRP':
+                pronounreplacement=k[i][0]
+            i=i+1
+        else:
+            i=i+1
+    first=i-1
+    
+    for i in noun:
+        print(k[i])
+    
+    for i in range(first+1,l):
+        if k[i][1] == 'VBZ' and k[i+1][1] == 'IN' :
+            vb='is-in'
+            second=i
+        elif k[i][1] == 'VBD' or k[i][1] == 'VBN' or k[i][1] == 'VBP' or k[i][1] == 'VBZ':
+            vb=k[i][0]
+            second=i
+            break
+    print(vb) 
+    
+    for i in range(second,l):
+        if k[i][1] == 'NNP' or k[i][1] == 'NN' or k[i][1] == 'JJ' or k[i][1] == 'NNS' :
+            print(k[i])
+            for nindex in noun:
+                if k[nindex][1] == 'PRP':
+                    cnoun=pronounreplacement
+                else:
+                    cnoun=k[nindex][0]
+                if k[second][0]=='are' and second+1 < l and k[second+1][0] == 'in':
+                    G.add_edge(cnoun,k[i][0],w='is-in')
+                elif k[second][0] == 'are':
+                    G.add_edge(cnoun,k[i][0],w='is-a')
+                else:
+                    G.add_edge(cnoun,k[i][0],w=vb)
+            
+pos = nx.spring_layout(G)
+#drawing
+nx.draw_networkx_nodes(G, pos, node_size=700)
+nx.draw_networkx_edges(G, pos, edgelist=G.edges,
+                       width=6)
+#labels
+nx.draw_networkx_labels(G, pos, font_size=10, font_family='sans-serif')
+edge_labels = nx.get_edge_attributes(G,'w')
+nx.draw_networkx_edge_labels(G, pos, edge_labels, font_size=10)
+
+#plt.axis('off')
+#plt.show()
