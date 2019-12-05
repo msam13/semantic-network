@@ -29,7 +29,7 @@ for i in sen:
         print('start')
         compound = 0
         i=startindex
-        while i<l and k[i][1] != 'VBZ' and k[i][1] != 'VBN' and k[i][1] != 'VBP' and k[i][1]!= 'VBD':
+        while i<l and k[i][1] != 'VBZ' and k[i][1] != 'VBN' and k[i][1] != 'VBP' and k[i][1]!= 'VBD' and k[i][1]!= 'RB':
             if k[i][1] != 'CC' and k[i]!=',':
                 noun.append(i)
                 if k[i][1]!='PRP':
