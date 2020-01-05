@@ -1,7 +1,7 @@
 import networkx as nx
 import nltk
 
-s='Akshar is a topper. He likes makeouts.'
+s='Akshar is a topper. He likes Maths.'
 G = nx.DiGraph()
 sen=s.split(".")
 pronounreplacement='NULL'
